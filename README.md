@@ -74,3 +74,12 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                                                              it. It saves the fit parameters, and displays the error between the model prediction
                                                              based on these parameters and the data. 
                                                      
+# Contents of sub-folders: 
+
+          I. autoFocusModules:
+                    a) calcFocMeasure:            Moves z-stage, capture new image, and return value of focus measure
+                    b) checkInBounds:             Make sure that microscope is not being commanded to move too high or low
+                    c) fmeasure:                  Contains switch statement with different measures of focus that have been formulated over time 
+                    d) goldenSearchAutoFocus:     Implements autofocusing by using the golden search algorithm. This algorithm moves the stage, and uses some selected fmeasure as the objective
+                    e) performAutoFocus: Calls goldenSearchFocus and chooses the measurement using a string. It is currently using 'GLLV'
+                    f) setFinalPosition: Chooses the final position as the half-way point between the last upper and lower bound of the golden search algorithm
