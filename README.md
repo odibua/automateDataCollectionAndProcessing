@@ -5,6 +5,24 @@ electrostatic comb-drive actuator in electrolytes. The actuator is fabricated as
 and the signal is applied in accordance with [1]. It also contains all functions called 
 in the GUI in different folders. 
 
+# Modifying Parameters Relevant to GUI:
+
+In the initializeMicroscope_Callback function, the following parameters are important to the autofocusing algorithm:
+
+          %Define default parameters for autofocus
+          handles.mmtoZ=5000/5e-3; #Conversion between mm and the z-position obtained from scope
+          handles.intervalMicronsL = 20;%35; #Lowest position below current z-stage position allowed
+          handles.intervalMicronsU = 20;%35; #Highest position above current z-stage position allowed
+          handles.intervalMicronsU = handles.intervalMicronsU*1e-6;
+          handles.intervalMicronsL = handles.intervalMicronsL*1e-6;
+          handles.maxIter=20; #Maximum number of iterations allowed in auto focus algorithm
+          handles.tol=2; #Tolerance that stops auto focus algorithm (maximum difference in updated bounds in golden section algorithm)
+
+In the postProcessDisplBWMeth_Callback function, the following parameter is important to calculating displacement:
+
+          pxl2mic=50/388; #Gives the conversion ratio between pixels and microns that is used in calculating displacement
+
+
 # Outline of Microscope GUI:
           I. Initialization Module:
                 a) Initialize Microscope:         Initializes the java class mmc that is used to control the microscope,
@@ -55,3 +73,4 @@ in the GUI in different folders.
                 b) Fit Model Parameters:                   Allows user to select data and to fit the parameters of different models to 
                                                              it. It saves the fit parameters, and displays the error between the model prediction
                                                              based on these parameters and the data. 
+                                                     
