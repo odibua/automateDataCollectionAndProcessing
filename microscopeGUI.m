@@ -32,15 +32,48 @@ function varargout = microscopeGUI(varargin)
 %
 %                 b) Focus Microscope:              Begins a while loop that allows the user to manually focus the microscope
 %                                                   so that the image we care about is clear.
-%                 
-%                 c) Complete Microscope Focusing:  Ends while loopBegins a while loop that allows the user to manually focus 
+%
+%                 c) Complete Microscope Focusing:  Ends while loopBegins a while loop that allows the user to manually focus
 %                                                   microscope.
 %
-%                 d) Initialize Function Generator: Initializes object that is used to control function generator and sets two 
-%                                                   channels 180 degrees out of phase. 
+%                 d) Initialize Function Generator: Initializes object that is used to control function generator and sets two
+%                                                   channels 180 degrees out of phase.
 %
 %                 e) Initialize Dig. Oscilloscope:  Initializes object that is used to control the oscilloscope, and the channel
 %                                                   channels strings.
+%           II. Calibration Module:
+%                 a) Set Frequency Sweep Parameters:         Sets the parameters that will be used define the amplitude of the signal applied to 
+%                                                            the device, the interval of frequencies over which the signal will sweep, the number 
+%                                                            of points in this interval, and whether the signal should be measured by an oscilloscope.
+%                                                            There are limits prescribed to these values to protect the device.
+%
+%                 b) Frequency Sweep, Capture Images:        Apply the voltage signal across prescribed frequencies for prescribed number of trials, 
+%                                                            capture images as a result of the applied signal, and save both the images and the
+%                                                            measured signals. 
+%
+%                 c) Set Voltage Sweep Parameters:           Sets the parameters that will be used to define the frequency of the signal applied to
+%                                                            the device, the interval of voltages over which the signal will sweep, and the number of points
+%                                                            in the interval. There are limits prescribed to these values to protect the device. 
+% 
+%                 d) Voltage Sweep, Capture Images:          Apply the voltage signal across prescribed voltages for prescribed number of trials, 
+%                                                            capture images as a result of the applied signal, and save both the images and the
+%                                                            measured signals. 
+%
+%                 e) Set Voltage and Frequency Parameters:   COMMENTED OUT OF CODE. WILL BE WRITTEN LATER
+%                 
+% 
+%                 f) Voltage and Frequency Sweep, Capture Images:   COMMENTED OUT OF CODE. WILL BE WRITTEN LATER
+
+%           III. Post-processing Module:
+%                 a) Measure Displacement, Binary Processing: Allows users to select folder obtained from the calibration module (which have
+%                                                             a specific structire), and process the contained files using a local adaptive gaussian 
+%                                                             threshold method in opencv-python. This returns the displacement of the actuator in each
+%                                                             trial, displays the displacements on a plot, and saves the data to a text file.
+% 
+%                 b) Fit Model Parameters:                   Allows user to select data and to fit the parameters of different models to 
+%                                                              it. It saves the fit parameters, and displays the error between the model prediction
+%                                                              based on these parameters and the data. 
+
 
 
 
@@ -296,7 +329,7 @@ function freqSweepCaptImgs_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %Define relevant parameters for frequency sweep
 controlVoltageBool=handles.controlVoltageBool;
-handles.tol=0.1;
+
 mmc = handles.mmc; %mmc handle
 intervalMS=handles.intervalMS;
 handles.stop_now = 0; %Create stop_now in handles structure
@@ -306,8 +339,8 @@ mmc.stopSequenceAcquisition; %Stop sequence acquisition
 end
 mmc.startContinuousSequenceAcquisition(intervalMS); %Start's process of continous acquisition
 figure(2);
+%Allows user to focus microscope at beginning of experiment
 display('Focusing Microscope');
-%mmc.stopSequenceAcquisition; %Stop sequence acquisition
 while ~(handles.stop_now)
     handles = guidata(hObject);  %Get the newest GUI
     img=captureImage(mmc); %Stores image acquired
@@ -320,6 +353,7 @@ end
 mmc.stopSequenceAcquisition; %Stop sequence acquisition
 display('Microscope Focusing Completed');
 
+%Stores values needed to conduct frequency sweep
 funGenObj = handles.funGenObj;  scopeObj = handles.scopeObj; 
 freqMin = handles.freqMin;      freqMax = handles.freqMax;
 freqArr = handles.freqArr;      devLabel = handles.devLabel;
@@ -328,17 +362,22 @@ vFixedCh2=vFixed;               vTarget=vFixed;
 nFreq = handles.nFreq;          nTrials = handles.nTrials;
 scopeMeas = handles.scopeMeas;
 
+%Creates folder that will store data
 folderNameFreq=writeSweepVoltFreqFolder(devLabel,vFixed,vFixed,freqMin,freqMax,1,nFreq,nTrials,handles.concentrationName);
 
 tic
+%Creates matrix that will store images
 imageMatrix = uint16(zeros(1024,1344,nTrials,nFreq+1));
 vFixedCh1Store=zeros(nFreq,1);  vFixedCh2Store=zeros(nFreq,1);
+%Runs nTrials of voltage sweeps on actuator and saves the resulting images
 for k=1:nTrials
     imageMatrix = uint16(zeros(1024,1344,nFreq+1));
     vFixed=vTarget;
-    
+    %Initializes structures that will store signals measured by oscilloscope
     [handles.freqCh1,handles.vPkPkCh1,handles.highCh1,handles.lowCh1,handles.freqCh2,handles.vPkPkCh2,handles.highCh2,handles.lowCh2,handles.waveFormCh1,handles.waveFormCh2] = initOscopeDatStorStruct(nFreq);    
-
+    
+    %Completes creation of folder that stores data. Asks user if they want
+    %to overwrite if folder already exists.
     folderNameTrial = [folderNameFreq, '\', 'Trial', num2str(k)];
     if (isdir(folderNameTrial)==false)
         mkdir(folderNameTrial);
@@ -349,8 +388,10 @@ for k=1:nTrials
     figure(2);
     
     F(nFreq+1) = struct('cdata',[],'colormap',[]); %Define frame structure that will store images in sweep
+    %Auto-focuses microscope
     performAutoFocus(handles.mmtoZ,handles.intervalMicronsU,handles.intervalMicronsL,handles.zlBound,handles.zuBound,handles.tol,handles.maxIter,@fmeasure,handles.zstage,mmc,handles.intervalMS);
     
+    %Obtains image of device before actuation and stores it in image matrix
     mmc.setExposure(100);
     mmc.snapImage();
     img = mmc.getImage();
@@ -363,13 +404,14 @@ for k=1:nTrials
     figure(3);
     imshow(imadjust(imageTemp));
     
+    %Performs frequency sweep on device
     pause(0.5);
     copyChan1ToChan2(funGenObj);
     setVoltageCh1(funGenObj,vFixedCh1);
     setVoltageCh2(funGenObj,vFixedCh1);
     [freqArr,funGenObj,scopeObj,scopeMeas,handles,imageMatrix] = sweepFreq(nFreq,freqArr,funGenObj,scopeObj,scopeMeas,handles,mmc,imageMatrix);
     
-    %Manual focusing block
+    %Manual focusing block that gives user time to rewet device if it is getting dry
     if (rem(k,3)==0)
         if mmc.isSequenceRunning()
         mmc.stopSequenceAcquisition; %Stop sequence acquisition
@@ -394,8 +436,8 @@ for k=1:nTrials
         end
         display('Microscope Focusing Completed');
     end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
+    %Turn off function generator and save data from trial
     turnOffChannels(funGenObj);
     for j=1:nFreq
         imwrite(imageMatrix(:,:,j+1),[folderNameTrial, '\volt1_freq', num2str(j), '.tif']);
@@ -571,7 +613,7 @@ function postProcessDisplBWMeth_Callback(hObject, eventdata, handles)
 dirName = uigetdir(matlabroot,'Select directory that contains data to be processed');
 pxl2mic=50/388; %Air 50x Scope
 %pxl2mic=100/625.33; %Water 40x Scope
-%convertToPNGFiles(dirName);
+%Process data and display calculated displacement
 measDisplacement(dirName,pxl2mic);
 
 % --- Executes on button press in fitModelParameters.
