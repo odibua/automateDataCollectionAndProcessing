@@ -1,4 +1,4 @@
-# Automate Data Collection and Processing
+# Automate Data Collection and Processing (In progress)
 
 This file contains the gui, microscopeGUI, that is used to apply voltage signals to an 
 electrostatic comb-drive actuator in electrolytes. The actuator is fabricated as in [1],
