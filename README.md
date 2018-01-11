@@ -167,3 +167,11 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     b) measDisplacement:  Calls python function that uses adaptive guassian procedure to binarize image and                                           find the displacement using the centroids.
                     
                     c) measDisplacementAdaptiveThresh.py:   Python function that uses adaptive guassian procedure to binarize image and                                          find the displacement using the centroids.
+                    
+   VIII. writeDataFoldersModules
+   
+                    a) writeSweepFreqFolder: Write folder for frequency sweep of signal.
+                    
+                    b) writeSweepVoltFolder: Write folder for voltage sweep of signal.
+                    
+                    c) writeSweepVoltFreqFolder: Write folder for voltage and frequency sweep of signal.
