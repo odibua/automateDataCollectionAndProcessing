@@ -76,7 +76,7 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                                                      
 # Contents of sub-folders: 
 
-          I. autoFocusModules:
+#          I. autoFocusModules:
                     a) calcFocMeasure:            Moves z-stage, capture new image, and return value of focus measure.
                     
                     b) checkInBounds:             Make sure that microscope is not being commanded to move too high or low.
@@ -93,13 +93,13 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     f) setFinalPosition:          Chooses the final position as the half-way point between the last upper and lower 
                                                   bound of the golden search algorithm.
 
-          II. digitalOScopeModules:
+#          II. digitalOScopeModules:
                     a) autoSet:         Auto-sets the digital oscilloscope to capture the signal it is measuring.
                     
                     b) getTekTrace:     Obtains the time-series of the signal measured by the oscilloscope as a function of time.
                     c) measAmpFreq:     Measures the frequency, peak-to-peak voltage, and high and low voltages of the signal measured on the oscilloscope.
                     
-          III. functionGeneratorModules:
+#          III. functionGeneratorModules:
                     a) copyChan1toChan2:          Makes sure that each channel reads the same thing.
                     
                     b) setChannels180OutofPhase:  Makes signals on the two channels 180 degrees out of phase with one another.
@@ -117,7 +117,7 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     h) turnOnChannels:    Turn on both channels on function generator
                     
                     
-          IV. initializationModules:
+#          IV. initializationModules:
                     a) initOscopeDatStorStruct:   Return data structures that stores information of the digital oscilloscope
                     
                     b) initOscopeDatStorStructSweepVoltFreq:   Return data structures that stores information of the digital oscilloscope when it sweeps the voltage and frequency.
@@ -131,14 +131,14 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     f) initializePhase:          Initialize channels of function generator as 180 degrees out of phase.
                     
                     
-          IV. microscopeModules:
+#          V. microscopeModules:
                     a) captureImage:             Capture image with microscope that is not fit to the full size of the microscope.
                     
                     b) snapFullSizedImage:       Capture full-sized image with microscope.
                     
                     
            
-          IV. parameterFittingAndControlModules:
+#          VI. parameterFittingAndControlModules:
                     a) chooseFromData:            Choose the displacements you will attempt to command the actuator to move toward using open-loop control.
                     
                     b) commandFrequency.m/py:     Find the frequencies that are required to obtain the displacements given a selected model, as well as the commanded voltage.
