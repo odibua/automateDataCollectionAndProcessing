@@ -24,7 +24,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
 
 
 # Outline of Microscope GUI:
-          I. Initialization Module:
+   I. Initialization Module:
+   
                 a) Initialize Microscope:         Initializes the java class mmc that is used to control the microscope,
                                                   the acquisition interval the maximum and minimum positions the stage,
                                                   is allowed to be moved, and the parameters used in the auto-focus algorithm.
@@ -40,7 +41,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
 
                 e) Initialize Dig. Oscilloscope:  Initializes object that is used to control the oscilloscope, and the channel
                                                   channels strings.
-          II. Calibration Module:
+   II. Calibration Module:
+   
                 a) Set Frequency Sweep Parameters:         Sets the parameters that will be used define the amplitude of the signal applied to 
                                                            the device, the interval of frequencies over which the signal will sweep, the number 
                                                            of points in this interval, and whether the signal should be measured by an oscilloscope.
@@ -64,7 +66,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                 f) Voltage and Frequency Sweep, Capture Images:   COMMENTED OUT OF CODE. WILL BE WRITTEN LATER
   
 
-          III. Post-processing Module:
+   III. Post-processing Module:
+   
                 a) Measure Displacement, Binary Processing: Allows users to select folder obtained from the calibration module (which have
                                                             a specific structire), and process the contained files using a local adaptive gaussian 
                                                             threshold method in opencv-python. This returns the displacement of the actuator in each
@@ -76,7 +79,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                                                      
 # Contents of sub-folders: 
 
-          I. autoFocusModules
+   I. autoFocusModules
+   
                     a) calcFocMeasure:            Moves z-stage, capture new image, and return value of focus measure.
                     
                     b) checkInBounds:             Make sure that microscope is not being commanded to move too high or low.
@@ -93,13 +97,15 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     f) setFinalPosition:          Chooses the final position as the half-way point between the last upper and lower 
                                                   bound of the golden search algorithm.
 
-          II. digitalOScopeModules
+   II. digitalOScopeModules
+          
                     a) autoSet:         Auto-sets the digital oscilloscope to capture the signal it is measuring.
                     
                     b) getTekTrace:     Obtains the time-series of the signal measured by the oscilloscope as a function of time.
                     c) measAmpFreq:     Measures the frequency, peak-to-peak voltage, and high and low voltages of the signal measured on the oscilloscope.
                     
-          III. functionGeneratorModules
+   III. functionGeneratorModules
+   
                     a) copyChan1toChan2:          Makes sure that each channel reads the same thing.
                     
                     b) setChannels180OutofPhase:  Makes signals on the two channels 180 degrees out of phase with one another.
@@ -117,7 +123,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     h) turnOnChannels:    Turn on both channels on function generator
                     
                     
-          IV. initializationModules
+   IV. initializationModules
+   
                     a) initOscopeDatStorStruct:   Return data structures that stores information of the digital oscilloscope
                     
                     b) initOscopeDatStorStructSweepVoltFreq:   Return data structures that stores information of the digital oscilloscope when it sweeps the voltage and frequency.
@@ -131,14 +138,16 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     f) initializePhase:          Initialize channels of function generator as 180 degrees out of phase.
                     
                     
-          V. microscopeModules
+   V. microscopeModules
+   
                     a) captureImage:             Capture image with microscope that is not fit to the full size of the microscope.
                     
                     b) snapFullSizedImage:       Capture full-sized image with microscope.
                     
                     
            
-          VI. parameterFittingAndControlModules
+   VI. parameterFittingAndControlModules
+   
                     a) chooseFromData:            Choose the displacements you will attempt to command the actuator to move toward using open-loop control.
                     
                     b) commandFrequency.m/py:     Find the frequencies that are required to obtain the displacements given a selected model, as well as the commanded voltage.
@@ -151,7 +160,8 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                     
                     e) runCombDriveModels:        Contains functions that run different models of the actuator in                                                             electrolyte. 
                     
-          VII. postProcessingModules
+   VII. postProcessingModules
+   
                     a) convertToPNGFiles: Convert generated files from function to png files.
                     
                     b) measDisplacement:  Calls python function that uses adaptive guassian procedure to binarize image and                                           find the displacement using the centroids.
