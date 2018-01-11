@@ -92,3 +92,61 @@ In the postProcessDisplBWMeth_Callback function, the following parameter is impo
                                                   
                     f) setFinalPosition:          Chooses the final position as the half-way point between the last upper and lower 
                                                   bound of the golden search algorithm.
+
+          II. digitalOScopeModules:
+                    a) autoSet:         Auto-sets the digital oscilloscope to capture the signal it is measuring.
+                    
+                    b) getTekTrace:     Obtains the time-series of the signal measured by the oscilloscope as a function of time.
+                    c) measAmpFreq:     Measures the frequency, peak-to-peak voltage, and high and low voltages of the signal measured on the oscilloscope.
+                    
+          III. functionGeneratorModules:
+                    a) copyChan1toChan2:          Makes sure that each channel reads the same thing.
+                    
+                    b) setChannels180OutofPhase:  Makes signals on the two channels 180 degrees out of phase with one another.
+                    
+                    c) setFreq:         Sets the frequency of the applied signal for both channels.
+                    
+                    d) setVoltage:      Sets the voltage of the applied signal for both channels.
+                    
+                    e) setVoltageCh1/2: Sets the voltage of the applied signal for channels 1/2.
+                    
+                    f) sweepFreq:       Apply a voltage signal across n logarithmically  spaced points in a range of frequencies.
+                    
+                    g) turnOffChannels:   Turn of both channels on function generator.
+                    
+                    h) turnOnChannels:    Turn on both channels on function generator
+                    
+                    
+          IV. initializationModules:
+                    a) initOscopeDatStorStruct:   Return data structures that stores information of the digital oscilloscope
+                    
+                    b) initOscopeDatStorStructSweepVoltFreq:   Return data structures that stores information of the digital oscilloscope when it sweeps the voltage and frequency.
+                    
+                    c) initializeDigOsc:         Initializes digital oscilloscope object.
+                    
+                    d) initializeFuncGen:        Initializes function generator object.
+                    
+                    e) initializeMicroManager:   Initialize micromanager connection to microscope.
+                    
+                    f) initializePhase:          Initialize channels of function generator as 180 degrees out of phase.
+                    
+                    
+          IV. microscopeModules:
+                    a) captureImage:             Capture image with microscope that is not fit to the full size of the microscope.
+                    
+                    b) snapFullSizedImage:       Capture full-sized image with microscope.
+                    
+                    
+           
+          IV. parameterFittingAndControlModules:
+                    a) chooseFromData:            Choose the displacements you will attempt to command the actuator to move toward using open-loop control.
+                    
+                    b) commandFrequency.m/py:     Find the frequencies that are required to obtain the displacements given a selected model, as well as the commanded voltage.
+                    
+                    c) fitClassic_LeakyModels:    Call python function that finds the parameters that best fit different models to the data.        
+                    
+                    d) fitParamsToData.py:        Fit parameters in different models to the data using least-squares 
+                                     
+                    b) obtainAvgVpp:              Take the average value of the voltage measured by function generator, and                                                   use it to calculate Vpp.
+                    
+                    e) runCombDriveModels:        Contains functions that run different models of the actuator in                                                             electrolyte. 
